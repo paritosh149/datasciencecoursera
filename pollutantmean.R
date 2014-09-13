@@ -17,12 +17,20 @@ pollutantmean <- function(directory, pollutant, id=1:332){
       }
       else
       {
-        print(paste(fullfilename,"does not exists",sep=" "))
+        #print(paste(fullfilename,"does not exists",sep=" "))
       }
     }
+    if(nrow(MF)>0)
+    {
      ## print(MF[pollutant])
     meanvalue <- round(mean(MF[[pollutant]], na.rm=TRUE),digits=3)
-    ## print(meanvalue)
+    print(meanvalue)
+    }
+    else
+    {
+      #print(nrow(MF))
+      #print('no data')
+    }
   }
   else
   {
