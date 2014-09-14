@@ -2,35 +2,18 @@ complete<-function(directory,id=1:332){
   if(file.exists(directory))
   {
     ## print(paste(directory,'exists.',sep=" "))
-    DF <- matrix(,0,2)
-    dimnames(DF)[[2]] <- list('id','nobs')
-    for(name in id)
+    files <- list.files(directory, full.names=TRUE)[id]
+    filecount <- length(files)
+    DF <- data.frame(Id=rep(0,filecount),nobs=0)
+    for(fnum in 1:filecount)
     {
-      filename <- sprintf('%03d',name)
-      ##print(filename)
-      fullfilename <- paste(directory,"/",filename,".csv",sep="")
-      if(file.exists(fullfilename))
-      {
-        ## print(paste(fullfilename,"exists",sep=" "))
-        tab01 <- read.csv(fullfilename)
-        ##MF <- merge(MF,tab01,all.x=TRUE,all.y=TRUE)
-        count <- 0
-        for(row in 1:nrow(tab01))
-        {
-          ##print(tab01[row,'sulfate'])
-          if(!is.na(tab01[row,'Date']) & !is.na(tab01[row,'sulfate']) & !is.na(tab01[row,'nitrate']))
-          {
-            count<- count + 1
-          }
-        }
-        DF <- rbind(DF,c(name,count))
-      }
-      else
-      {
-        #print(paste(fullfilename,"does not exists",sep=" "))
-      }
+        tab01 <- read.csv(files[fnum])
+        ID <- tab01[1,4]
+        count <- complete.cases(tab01)
+        totalcount <- sum(count)
+        DF[fnum,] <- c(ID,totalcount)
     }
-    print(DF)
+    DF
   }
   else
   {
